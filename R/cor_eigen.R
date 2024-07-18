@@ -44,7 +44,8 @@ Eigen::MatrixXd cor_eigen(Eigen::Map<Eigen::MatrixXd> & X,
 
 Rcpp::cppFunction(code = cor_eigen,
                   depends = "RcppEigen",
-                  includes = "#include <RcppEigen.h>")
+                  includes = "#include <RcppEigen.h>",
+                  echo = FALSE)
 
 
 ############################ cpp version of cor with arma    #############################
