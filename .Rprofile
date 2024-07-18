@@ -9,6 +9,8 @@ reticulate::py_config()
 ##|
 
 library(magrittr)
+library(usethis)
+library(fsnulls)
 
 ##| load all functions --------------------------------------------------------
 ##|
