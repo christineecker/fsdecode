@@ -1,4 +1,4 @@
-#' fs_display_gene_expression_map
+#' fs_plot_gene
 #'
 #' Displays gene expression data for gene
 #'
@@ -11,7 +11,7 @@
 #' @return RETURN_DESCRIPTION
 #' @examples
 #' fs_display_gene_expression_map("HTR1A", type = "symbol")
-fs_display_gene_expression_map <- function(gene.name, type="symbol") {
+fs_plot_gene <- function(gene.name, type="symbol") {
 
   if (type == "symbol") {
     gene.index <- which(abagen.genes$symbol == gene.name)
@@ -45,4 +45,4 @@ fs_display_gene_expression_map <- function(gene.name, type="symbol") {
 #                                                                              #
 ################################################################################
 
-# fs_display_gene_expression_map("HTR1A", type = "symbol")
+# fs_plot_gene("HTR1A", type = "symbol")
