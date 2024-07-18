@@ -43,7 +43,7 @@ fs_create_decode_sa_null_data_env <- function(hemi="both", genes=abagen.genes$sy
     data.env$mRNA <- mRNA$rh
     data.env$permuted.pcs <- permuted.pcs$rh
   } else if  (hemi == "both") {
-    writeLines("\nCreating data environment for both hemispheres ... ")
+    writeLines("\nConcatenating across hemispheres ... ")
     data.env$mRNA <- cbind(mRNA$lh, mRNA$rh)
     for (i in 1:9) {
       data.env$permuted.pcs[[i]] <- cbind(permuted.pcs$lh[[i]], permuted.pcs$rh[[i]])

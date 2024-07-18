@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' fs.overlay <- c(fsdata::pet.5HT$`5HT1A`$lh, fsdata::pet.5HT$`5HT1A`$rh)
-#' fs.overlay[fsdata::fsavg6$medial.wall.verts$both] <- NA
+#' fs.overlay[fsavg6$medial.wall.verts$both] <- NA
 #' genes.decoded <- fs_decode_lme(fs.overlay, max.distance = 5, mirror = F)
 #'
 fs_decode_lme <- function(fs.overlay, max.distance = 5, genes = abagen.genes$symbol) {
