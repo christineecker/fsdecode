@@ -1,0 +1,123 @@
+---
+title: "decode_5HTR1A"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{decode_5HTR1A}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+#library(fsdecode)
+library(fsnulls)
+```
+
+# Display PET target map and corresponding mRNA map
+
+```{r}
+
+##| Load PET data --------------------------------------------------------
+##| 
+
+pet.overlay <- c(pet.5HT$`5HT1A`$lh, pet.5HT$`5HT1A`$rh)
+pet.overlay[fsavg6$medial.wall.verts$both] <- NA
+
+fs_plot(pet.overlay)
+
+##| load mRNA data --------------------------------------------------------
+##| 
+
+if (!exists("mRNA")) {
+  mRNA <- load_mRNA_expression_maps()
+}
+
+##| Display mRNA pattern for gene
+##|
+
+fs_plot_gene("HTR1A")
+
+```
+
+## Decode PET overlay using different decoding approaches
+
+## Spatial Null Model
+
+```{r, decode sa null,  eval=F}
+
+##| Create sa_null decoding data environment --------------------------------------------------------
+##| includes `mRNA`, `permuted.pcs`, and `gene.allocation`.
+
+data.env <- fs_create_decode_sa_null_data_env()
+
+##| decode using spatial null models --------------------------------------------------------
+##| 
+
+genes.sa_null <- fs_decode_sa_null(pet.overlay,
+                              data.env = data.env,
+                              hemi = "both",
+                              method = "pearson",
+                              use = "pairwise.complete.obs",
+                              genes = abagen.genes$symbol)
+
+#save(file = "./data/genes.HTR1A.sa_null.rda", genes.sa_null)
+
+## get correlation with target gene ===============================================
+
+gene.index <- which(abagen.genes$symbol == "HTR1A")
+genes.sa_null[gene.index,]
+
+```
+
+## Using Linear Mixed Effects model
+
+Note. takes roughly 2-3 minutes
+
+```{r, decode LME,  eval=F}
+
+##| decode using LME model --------------------------------------------------------
+##| 
+
+genes.lme <- fs_decode_lme(pet.overlay)
+
+#save(file = "./data/genes.HTR1A.lme.rda", genes.lme)
+
+##| get correlation with target gene --------------------------------------------------------
+##| 
+
+gene.index <- which(abagen.genes$symbol == "HTR1A")
+genes.lme[gene.index,]
+
+```
+
+
+## Using General Least Squares approach
+
+Note. takes roughly 8 hours to compute using 15 nodes !!!
+
+```{r, decode gls, eval=F}
+
+## decoding using GLS model ===============================================
+
+genes.gls <-
+  fs_decode_gls(
+    pet.overlay,
+    max.distance = 5,
+    mirror = F,
+    genes = abagen.genes$symbol,
+    mc.cores = 15
+  )
+
+#save(file = "./data/genes.HTR1A.gls.rda", genes.gls)
+
+## get correlation with target gene ===============================================
+
+genes.gls[gene.index,]
+
+```
