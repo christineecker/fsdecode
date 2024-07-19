@@ -54,7 +54,9 @@ fs_plot_gene("HTR1A")
 ##| Create sa_null decoding data environment --------------------------------------------------------
 ##| includes `mRNA`, `permuted.pcs`, and `gene.allocation`.
 
-data.env <- fs_create_decode_sa_null_data_env()
+genes <- abagen.genes$symbol[1:100]
+
+data.env <- fs_create_decode_sa_null_data_env("both", genes)
 
 ##| decode using spatial null models --------------------------------------------------------
 ##| 
@@ -64,14 +66,14 @@ genes.sa_null <- fs_decode_sa_null(pet.overlay,
                               hemi = "both",
                               method = "pearson",
                               use = "pairwise.complete.obs",
-                              genes = abagen.genes$symbol)
+                              genes = genes)
 
 #save(file = "./data/genes.HTR1A.sa_null.rda", genes.sa_null)
 
 ## get correlation with target gene ===============================================
 
-gene.index <- which(abagen.genes$symbol == "HTR1A")
-genes.sa_null[gene.index,]
+# gene.index <- which(abagen.genes$symbol == "HTR1A")
+# genes.sa_null[gene.index,]
 
 ```
 
@@ -97,7 +99,7 @@ genes.lme[gene.index,]
 ```
 
 
-## Using General Least Squares approach
+## Using General Least Squares (GLS) approach
 
 Note. takes roughly 8 hours to compute using 15 nodes !!!
 
@@ -105,12 +107,14 @@ Note. takes roughly 8 hours to compute using 15 nodes !!!
 
 ## decoding using GLS model ===============================================
 
+genes <- abagen.genes$symbol[1:10]
+
 genes.gls <-
   fs_decode_gls(
     pet.overlay,
     max.distance = 5,
     mirror = F,
-    genes = abagen.genes$symbol,
+    genes = genes,
     mc.cores = 15
   )
 
@@ -118,6 +122,7 @@ genes.gls <-
 
 ## get correlation with target gene ===============================================
 
+gene.index <- which(abagen.genes$symbol == "HTR1A")
 genes.gls[gene.index,]
 
 ```
