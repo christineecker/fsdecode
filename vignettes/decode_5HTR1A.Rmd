@@ -54,7 +54,7 @@ fs_plot_gene("HTR1A")
 ##| Create sa_null decoding data environment --------------------------------------------------------
 ##| includes `mRNA`, `permuted.pcs`, and `gene.allocation`.
 
-genes <- abagen.genes$symbol[1:100]
+genes <- abagen.genes$symbol
 
 data.env <- fs_create_decode_sa_null_data_env("both", genes)
 
@@ -72,10 +72,32 @@ genes.sa_null <- fs_decode_sa_null(pet.overlay,
 
 ## get correlation with target gene ===============================================
 
-# gene.index <- which(abagen.genes$symbol == "HTR1A")
-# genes.sa_null[gene.index,]
+gene.index <- which(abagen.genes$symbol == "HTR1A")
+genes.sa_null[gene.index,]
 
 ```
+
+## Using Alexander Bloch spins of target pattern
+
+```{r}
+
+##| decode based on all genes
+##|
+
+system.time({
+genes.spins <- fs_decode_spins(pet.overlay,
+                               data.env = NULL,
+                               n.spins = 1000L,
+                               genes = abagen.genes$symbol)
+})
+
+## get correlation with target gene ===============================================
+
+gene.index <- which(abagen.genes$symbol == "HTR1A")
+genes.spins[gene.index,]
+
+```
+
 
 ## Using Linear Mixed Effects model
 
