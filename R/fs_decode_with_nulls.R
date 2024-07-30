@@ -68,7 +68,7 @@ fs_decode_with_nulls <- function(fs.overlay,
   p.perm <- vector()
   for (i in 1:n.genes) {
     ## compute two-tailed permutation p value
-    p.perm[i] = (sum(abs(r.null[i,], na.rm = T) >= abs(r.obs[i])) + 1) / (1 + n.surrogates)
+    p.perm[i] = (sum(abs(r.null[i,]) >= abs(r.obs[i])) + 1) / (1 + n.surrogates)
   }
 
   ##| compute maxT corrected p values --------------------------------------------------------
@@ -79,7 +79,7 @@ fs_decode_with_nulls <- function(fs.overlay,
   # get maximum absolute correlation across genes within permutations
   maxR <- apply(abs(r.null), 2, function(x) {max(x, na.rm = T)})
   for (i in 1:n.genes) {
-    p.adj[i] = (sum(maxR >= abs(r.obs[i]), na.rm = T) + 1) / (1 + n.surrogates)
+    p.adj[i] = (sum(maxR >= abs(r.obs[i])) + 1) / (1 + n.surrogates)
   }
 
   ##| compute fdr adjusted p-values --------------------------------------------------------
