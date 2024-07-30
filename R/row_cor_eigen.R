@@ -11,8 +11,11 @@
 # this is synonymous to cor_eigen(t(X), t(Y))
 
 row_cor_eigen <- '
-Eigen::MatrixXd row_cor_eigen(Eigen::Map<Eigen::MatrixXd> & X,
-                              Eigen::Map<Eigen::MatrixXd> & Y) {
+Eigen::MatrixXd row_cor_eigen(Eigen::Map<Eigen::MatrixXd> & X1,
+                              Eigen::Map<Eigen::MatrixXd> & Y1) {
+
+  Eigen::MatrixXd X = X1;
+  Eigen::MatrixXd Y = Y1;
 
   // Handle degenerate cases
   if (X.rows() == 0 || Y.rows() == 0) {
