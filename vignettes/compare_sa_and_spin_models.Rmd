@@ -1,0 +1,67 @@
+---
+title: "compare_sa_and_spin_models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{compare_sa_and_spin_models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(fsdecode)
+```
+
+## Load data into workspace
+
+```{r}
+
+fs.overlay <- c(pet.5HT$`5HT1A`$lh, pet.5HT$`5HT1A`$rh)
+
+##| compute spins --------------------------------------------------------
+##| 
+
+fs.spins <- fsnulls::fs_create_spins_bloch(fs.overlay, 1000L)
+
+##| read surrogates  --------------------------------------------------------
+##|
+
+# Note. computed using `fsnulls` package
+
+filename <- system.file("extdata/lh.rh.5HT1A.knn30000.sa1000.rda", package = "fsnulls")
+load(filename)
+
+```
+
+## Decode using spins and surrogate models
+
+```{r}
+
+data.env <- new.env()
+data.env <- fs_create_decode_spins_data_env("both")
+genes <- abagen.genes$symbol
+
+##| spin decoding --------------------------------------------------------
+##| 
+
+genes.decoded.spins <- fs_decode_with_nulls(
+  fs.overlay,
+  fs.surrogates = fs.spins,
+  data.env = data.env,
+  genes = genes
+)
+
+##| sa decoding --------------------------------------------------------
+##| 
+
+
+
+
+```
+

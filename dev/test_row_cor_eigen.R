@@ -27,6 +27,8 @@ data.env <- fs_create_decode_spins_data_env("both")
 fs.overlay <- c(pet.5HT$`5HT1A`$lh, pet.5HT$`5HT1A`$rh)
 fs.overlay[fsavg6$medial.wall.verts$both] <- 0
 
+
+
 n.spins <- 1000L
 spins <- fsnulls::fs_create_spins_bloch(fs.overlay, n.spins)
 
