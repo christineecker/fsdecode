@@ -77,7 +77,7 @@ fs_save_plot_both <- function(plot, write.dir, filename, legend.label="") {
 
   # close images --------------------------------------------------
 
-  while (rgl::rgl.cur() > 0) { rgl::rgl.close() }
+  while (rgl::rgl.cur() > 0) { rgl::close3d() }
 
   ## remove files ------------------------------------------
 

@@ -82,7 +82,7 @@ fs_save_plot_hemi <- function(plot,
 
   # close images --------------------------------------------------
 
-  while (rgl::rgl.cur() > 0) { rgl::rgl.close() }
+  while (rgl::rgl.cur() > 0) { rgl::close3d() }
 
   ## remove files ------------------------------------------
 
