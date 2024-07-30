@@ -25,7 +25,6 @@ fs_decode_spins <- function(fs.overlay,
 
   fs.overlay[fsavg6$medial.wall.verts$both] <- 0
 
-  data.env <- NULL
   if(is.null(data.env)){
     data.env <- new.env()
     data.env <- fs_create_decode_spins_data_env("both", genes)
@@ -34,16 +33,17 @@ fs_decode_spins <- function(fs.overlay,
   ##| compute spins --------------------------------------------------------
   ##|
 
+  writeLines("\nCreating spin models ...")
   fs.overlay.spins <- fsnulls::fs_create_spins_bloch(fs.overlay, n.spins)
-  fs_plot(fs.overlay.spins[2,])
+  #fs_plot(fs.overlay.spins[2,])
 
   ##| compute observed correlations  --------------------------------------------------------
   ##|
 
-  source("R/row_corr_eigen.R")
+  source("R/row_cor_eigen.R")
   writeLines("\nComputing observed correlations between overlay and all genes ...")
   r.obs <- vector()
-  r.obs <- as.vector(row_cor_eigen(data.env$mRNA, t(fs.overlay))) #| n.genes
+  r.obs <- as.vector(row_cor_eigen(data.env$mRNA, t(fs.overlay))) #| 1 x n.genes
 
   ##| compute null correlations --------------------------------------------------------
   ##|
@@ -62,6 +62,16 @@ fs_decode_spins <- function(fs.overlay,
     p.perm[i] = (sum(abs(r.null[i,]) >= abs(r.obs[i])) + 1) / (1 + n.spins)
   }
 
+  ##| compute maxT corrected p values --------------------------------------------------------
+  ##|
+
+  writeLines("\nComputing maxT adjusted p-values ...")
+  p.adj <- vector()
+  maxR <- apply(abs(r.null), 2, function(x) {max(x, na.rm = T)}) # get maximum absolute correlation across PCs within permutations
+  for (i in 1:nrow(data.env$mRNA)) {
+    p.adj[i] = (sum(maxR >= abs(r.obs[i])) + 1) / (1 + n.spins)
+  }
+
   ##| compute fdr adjusted p-values --------------------------------------------------------
   ##|
 
@@ -75,8 +85,8 @@ fs_decode_spins <- function(fs.overlay,
                                           "gene.entrez" = abagen.genes$entrez[gene.index],
                                           "r" = r.obs,
                                           "p.perm" = p.perm,
+                                          "p.maxT.adj" = p.adj,
                                           "p.fdr.adj" = p.fdr.adj)
-
 
   return(genes.decoded)
 }
@@ -92,10 +102,7 @@ fs_decode_spins <- function(fs.overlay,
 # n.spins <- 100L
 # genes <- abagen.genes$symbol[1:1000]
 #
-# genes.decoded <- fs_decode_spins(fs.overlay,
-#                                  data.env = data.env,
-#                                  n.spins = n.spins,
-#                                  genes = genes)
+# genes.decoded <- fs_decode_spins(fs.overlay)
 # str(genes.decoded)
 
 
