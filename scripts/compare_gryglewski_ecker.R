@@ -47,6 +47,8 @@ pl <- ggplot(df, aes(x = Gryglewski, y = Ecker)) %>%
   annotate("text", x = 3, y = Inf, label = label, hjust = 0, vjust = +2, size = 2) +
   xlim(3,8) + ylim(0, 0.8)
 
+print(pl)
+
 ggsave(
   filename = paste0(out.dir, "HTR1A_cor.pdf"),
   plot = pl,
@@ -68,6 +70,7 @@ ggsave(
 ##|
 
 lh.data <- Gryglewski$HTR2A$lh
+lh.data
 
 cm <- fs_plot(lh.data, "fsaverage6", "lh", c(7, 9))
 fs_save_plot_hemi(cm, out.dir, "Gryglewski_HTR2A.png", "lh", "log2(mRNA)")
