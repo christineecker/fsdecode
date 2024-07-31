@@ -28,6 +28,8 @@ fs.overlay <- c(pet.5HT$`5HT1A`$lh, pet.5HT$`5HT1A`$rh)
 ##| 
 
 fs.spins <- fsnulls::fs_create_spins_bloch(fs.overlay, 1000L)
+fs.spins[1:10, 1:10]
+fs_plot(fs.spins[1,])
 
 ##| read surrogates  --------------------------------------------------------
 ##|
@@ -36,7 +38,8 @@ fs.spins <- fsnulls::fs_create_spins_bloch(fs.overlay, 1000L)
 
 filename <- system.file("extdata/lh.rh.5HT1A.knn30000.sa1000.rda", package = "fsnulls")
 load(filename)
-
+sa.5HT1A[, fsavg6$medial.wall.verts$both] <- 0
+sa.5HT1A[1:10, 1:10]
 ```
 
 ## Decode using spins and surrogate models
@@ -56,12 +59,139 @@ genes.decoded.spins <- fs_decode_with_nulls(
   data.env = data.env,
   genes = genes
 )
+print(genes.decoded.spins)
+
+gene.index <- which(abagen.genes$symbol == "HTR1A")
+genes.decoded.spins[gene.index,]
 
 ##| sa decoding --------------------------------------------------------
 ##| 
 
+genes.decoded.sa <- fs_decode_with_nulls(
+  fs.overlay,
+  fs.surrogates = sa.5HT1A,
+  data.env = data.env,
+  genes = genes
+)
+
+gene.index <- which(abagen.genes$symbol == "HTR1A")
+print(genes.decoded.sa[gene.index,])
+
+##| sa gradient decoding --------------------------------------------------------
+##| 
+
+genes.decoded.a_null <- fs_decode_with_nulls(
+  fs.overlay,
+  fs.surrogates = sa.5HT1A,
+  data.env = data.env,
+  genes = genes
+)
+
+gene.index <- which(abagen.genes$symbol == "HTR1A")
+print(genes.decoded.sa[gene.index,])
+
+```
 
 
+```{r}
+
+genes <- abagen.genes$symbol
+data.env <- fs_create_decode_sa_null_data_env("both", genes)
+
+##| decode using spatial null models --------------------------------------------------------
+##| 
+
+genes.sa_null <- fs_decode_sa_null(fs.overlay,
+                              data.env = data.env,
+                              hemi = "both",
+                              method = "pearson",
+                              use = "pairwise.complete.obs",
+                              genes = genes)
+
+gene.index <- which(abagen.genes$symbol == "HTR1A")
+print(genes.sa_null[gene.index,])
+
+```
+
+
+## plot False positive rate (FPR)
+
+```{r}
+
+##| Compute FDR --------------------------------------------------------
+##| 
+
+n.genes <- 15633
+
+fpr.sa_null <- sapply(c(0.05, 0.01, 0.001), function(p) {
+  length(which(genes.sa_null$p.maxT.adj < p)) / n.genes
+})
+fpr.sa_null
+
+fpr.spins <- sapply(c(0.05, 0.01, 0.001), function(p) {
+  length(which(genes.decoded.spins$p.maxT.adj < p)) / n.genes
+})
+fpr.spins
+
+fpr.sa <- sapply(c(0.05, 0.01, 0.001), function(p) {
+  length(which(genes.decoded.sa$p.maxT.adj < p)) / n.genes
+})
+fpr.sa
+
+##| Concatenate data frame --------------------------------------------------------
+##| 
+
+df.fpr <- data.frame(
+  "p" = factor(rep(c("0.05", "0.01", "0.001"), 3), levels = c("0.05", "0.01", "0.001")),
+  "method" = as.factor(c(rep("spins", 3), rep("sa", 3), rep("a-null", 3))),
+  "FPR" = c(fpr.spins, fpr.sa, fpr.sa_null)
+)
+df.fpr
+
+
+##| Create figure --------------------------------------------------------
+##| 
+
+xlabel <- expression("adjusted p-value (p"[adj]*")")
+ylabel <- expression("P(p < p"[adj]*")")
+
+p <- ggplot(data = df.fpr, aes(x = p, y = FPR, group = method, color = method, fill = method)) +
+  geom_line(size = 0.5) +
+  scale_color_manual(values = c('#568ab7', '#ad3436', 'orange'),
+                     labels = c("gradient", expression(alpha*"-null"), "spins")) +
+  xlab(xlabel) + ylab(ylabel) +
+  theme(legend.key.size = unit(0.2, "cm"),
+        legend.position = c(0.8, 0.9),legend.title=element_blank()) +
+  theme(legend.text=element_text(size=5))
+
+print(p)
+df.fpr
+
+```
+
+## Spearman Rank Correlation between gene p values
+
+```{r}
+df <- data.frame("sa_null" = genes.sa_null$p.maxT.adj,
+                 "sa" = genes.decoded.sa$p.maxT.adj,
+                 "spins" = genes.decoded.spins$p.maxT.adj)
+
+Hmisc::rcorr(as.matrix(df),type="spearman")
+
+```
+
+## Percentage Overlap between gene sets
+
+```{r}
+
+genes.index.sa_null <- which(genes.sa_null$p.maxT.adj < 0.05)
+length(genes.index.sa_null)
+genes.index.sa <- which(genes.decoded.sa$p.maxT.adj < 0.05)
+length(genes.index.sa)
+
+which(genes.index.sa %in% genes.index.sa_null) %>% length
+
+fs_plot_gene("HTR1A")
 
 ```
 
