@@ -4,6 +4,7 @@
 #'
 #' @param gene.name DESCRIPTION.
 #' @param type Either 'symbol' or 'entrez'
+#' @param range description
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -11,7 +12,7 @@
 #' @return RETURN_DESCRIPTION
 #' @examples
 #' fs_display_gene_expression_map("HTR1A", type = "symbol")
-fs_plot_gene <- function(gene.name, type="symbol") {
+fs_plot_gene <- function(gene.name, type="symbol", range = NULL) {
 
   if (type == "symbol") {
     gene.index <- which(abagen.genes$symbol == gene.name)
@@ -21,7 +22,14 @@ fs_plot_gene <- function(gene.name, type="symbol") {
     mRNA <- load_mRNA_expression_maps()
   }
 
-  cm <- mRNA$lh.rh.mRNA.fsavg6.fwhm5$lh[gene.index,] %>%
+  fs.overlay <- mRNA$lh.rh.mRNA.fsavg6.fwhm5$lh[gene.index,]
+
+  if (is.null(range)) {
+    range <- c(min(fs.overlay, na.rm = T) - 0.01,
+               max(fs.overlay, na.rm = T) + 0.01)
+  }
+
+  cm <- fs.overlay %>%
     fsbrain::vis.data.on.fsaverage(subjects_dir = get_SUBJECTS_DIR(),
                                    vis_subject_id = "fsaverage6",
                                    surface = 'orig',
@@ -30,8 +38,7 @@ fs_plot_gene <- function(gene.name, type="symbol") {
                                                            'n' = 100,
                                                            'col.na' = "grey",
                                                            'symm'= F,
-                                                           'range' = c(min(., na.rm=T) - 0.01,
-                                                                       max(., na.rm=T) + 0.01)
+                                                           'range' = range
                                    ), draw_colorbar = TRUE)
 
   assign("mRNA", mRNA, envir=.GlobalEnv)
