@@ -70,8 +70,7 @@ fs_save_plot_view_angle <- function(plot,
       horizontal = F,
       offset = "+0+0",
       extend_brainview_img_height_by = 115,
-      transparency_color = "#FFFFFF",
-      delete_colorbar_img = T
+      transparency_color = "#FFFFFF"
     )
 
     system(paste0("cd ", write.dir, "; rm tmp*"))

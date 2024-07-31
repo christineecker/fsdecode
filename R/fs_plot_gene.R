@@ -14,9 +14,19 @@
 #' fs_display_gene_expression_map("HTR1A", type = "symbol")
 fs_plot_gene <- function(gene.name, type="symbol", range = NULL) {
 
+  ##| Identify gene.id --------------------------------------------------------
+  ##|
+
   if (type == "symbol") {
-    gene.index <- which(abagen.genes$symbol == gene.name)
+    gene.index <- which(abagen.genes$symbol == gene.id)
+  } else if (type == "entrez") {
+    gene.index <- which(abagen.genes$entrez == gene.id)
+  } else {
+    stop("type must be either 'symbol' or 'entrez'")
   }
+
+  ##| load mRNA data into workspace --------------------------------------------------------
+  ##|
 
   if (!exists("mRNA")) {
     mRNA <- load_mRNA_expression_maps()
