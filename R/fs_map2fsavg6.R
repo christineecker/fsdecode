@@ -9,8 +9,9 @@
 #'
 #' @return FreeSurfer fsaverage6 (fsavg6) overlay vector.
 #' @examples
-#' data.fsavg6 <- fs_map2fsavg6(x = data.fsavg7, hemi="lh")
-fs_map2fsavg6 <- function(x, hemi="lh") {
+#' data.fsavg6 <- fs_map2fsavg6(fs.overlay = data.fsavg7, hemi="lh")
+#'
+fs_map2fsavg6 <- function(fs.overlay, hemi) {
 
   ##| save tmp overlay file --------------------------------------------------------
   ##|
