@@ -5,7 +5,7 @@
 #' Plots FreeSurfer overlay data on fsaverage surface
 #'
 #' @param fs.overlay DESCRIPTION.
-#' @param fsaverage DESCRIPTION.
+#' @param fsaverage Either `fsaverage6` or `fsaverage`
 #' @param hemi Either "lh", "rh", or "both"
 #'
 #' @export
@@ -21,7 +21,7 @@ fs_plot <- function(fs.overlay,
   if (hemi == "both") {
     cm <- fsbrain::vis.data.on.fsaverage(
       subjects_dir = get_SUBJECTS_DIR(),
-      vis_subject_id = "fsaverage6",
+      vis_subject_id = fsaverage,
       surface = 'orig',
       morph_data_both = fs.overlay,
       makecmap_options = list(
@@ -38,7 +38,7 @@ fs_plot <- function(fs.overlay,
   } else if (hemi == "lh") {
     cm <- fsbrain::vis.data.on.fsaverage(
       subjects_dir = get_SUBJECTS_DIR(),
-      vis_subject_id = "fsaverage6",
+      vis_subject_id = fsaverage,
       surface = 'orig',
       morph_data_lh = fs.overlay,
       makecmap_options = list(
@@ -55,7 +55,7 @@ fs_plot <- function(fs.overlay,
   } else {
     cm <- fsbrain::vis.data.on.fsaverage(
       subjects_dir = get_SUBJECTS_DIR(),
-      vis_subject_id = "fsaverage6",
+      vis_subject_id = fsaverage,
       surface = 'orig',
       morph_data_rh = fs.overlay,
       makecmap_options = list(
