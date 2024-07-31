@@ -12,7 +12,7 @@
 #' @return RETURN_DESCRIPTION
 #' @examples
 #' fs_display_gene_expression_map("HTR1A", type = "symbol")
-fs_plot_gene <- function(gene.name, type="symbol", range = NULL) {
+fs_plot_gene <- function(gene.id, type="symbol", range = NULL) {
 
   ##| Identify gene.id --------------------------------------------------------
   ##|
