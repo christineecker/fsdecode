@@ -18,6 +18,9 @@ rh.HTR1A <- read.fs.morph(rh.filename)
 lh.HTR1A.fsavg6 <- fs_map2fsavg6(lh.HTR1A, "lh")
 rh.HTR1A.fsavg6 <- fs_map2fsavg6(rh.HTR1A, "rh")
 
+lh.HTR1A.fsavg6[fsavg6$medial.wall.verts$lh] <- NA
+rh.HTR1A.fsavg6[fsavg6$medial.wall.verts$rh] <- NA
+
 ##| HTR2A --------------------------------------------------------
 ##|
 
@@ -27,8 +30,11 @@ rh.filename <- paste0(data.dir, "3356_HTR2A/3356_mRNA_mirr_rh.mgh")
 lh.HTR2A <- read.fs.morph(lh.filename)
 rh.HTR2A <- read.fs.morph(rh.filename)
 
-lh.HTR2A.fsavg6 <- fs_map2fsavg6(lh.HTR1A, "lh")
-rh.HTR2A.fsavg6 <- fs_map2fsavg6(rh.HTR1A, "rh")
+lh.HTR2A.fsavg6 <- fs_map2fsavg6(lh.HTR2A, "lh")
+rh.HTR2A.fsavg6 <- fs_map2fsavg6(rh.HTR2A, "rh")
+
+lh.HTR2A.fsavg6[fsavg6$medial.wall.verts$lh] <- NA
+rh.HTR2A.fsavg6[fsavg6$medial.wall.verts$rh] <- NA
 
 ##| HTR4 --------------------------------------------------------
 ##|
@@ -39,8 +45,11 @@ rh.filename <- paste0(data.dir, "3360_HTR4/3360_mRNA_mirr_rh.mgh")
 lh.HTR4 <- read.fs.morph(lh.filename)
 rh.HTR4 <- read.fs.morph(rh.filename)
 
-lh.HTR4.fsavg6 <- fs_map2fsavg6(lh.HTR1A, "lh")
-rh.HTR4.fsavg6 <- fs_map2fsavg6(rh.HTR1A, "rh")
+lh.HTR4.fsavg6 <- fs_map2fsavg6(lh.HTR4, "lh")
+rh.HTR4.fsavg6 <- fs_map2fsavg6(rh.HTR4, "rh")
+
+lh.HTR4.fsavg6[fsavg6$medial.wall.verts$lh] <- NA
+rh.HTR4.fsavg6[fsavg6$medial.wall.verts$rh] <- NA
 
 ##| concatenate to list --------------------------------------------------------
 ##|
