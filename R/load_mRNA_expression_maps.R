@@ -24,4 +24,4 @@ load_mRNA_expression_maps <- function() {
 #                                                                              #
 ################################################################################
 
-
+##| mRNA.data <- load_mRNA_expression_maps()

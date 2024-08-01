@@ -15,10 +15,10 @@
 load_surrogate_pcs <- function() {
 
   data.env <- new.env()
-  fpath <- system.file("extdata", "lh.rh.mRNA.pcs.fwhm5.gaussian.sa1000.rda", package="fsdecodev3")
+  fpath <- system.file("extdata", "lh.rh.mRNA.pcs.fwhm5.gaussian.sa1000.rda", package="fsdecode")
   load(fpath, envir = data.env)
 
   return(data.env)
 }
 
-#| data.env <- load_surrogate_pcs()
+##| data.env <- load_surrogate_pcs()
