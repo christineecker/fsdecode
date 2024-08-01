@@ -31,7 +31,7 @@ fs_spatial_cor_spins <- function(fs.x,
   ##| compute observed correlation --------------------------------------------------------
   ##|
 
-  source("R/row_corr_eigen.R")
+  source("R/row_cor_eigen.R")
   writeLines("\nComputing observed correlations between overlays ...")
   r.obs <- cor(fs.x, fs.y, use = "everything", method = method)
   r.obs
@@ -39,7 +39,6 @@ fs_spatial_cor_spins <- function(fs.x,
   ##| compute null correlations --------------------------------------------------------
   ##|
 
-  source("R/row_corr_eigen.R")
   writeLines("\nComputing null correlations between x spins and y ...")
   r.null <- as.vector(row_cor_eigen(fs.x.spins, t(fs.y))) #| n.spins
 
