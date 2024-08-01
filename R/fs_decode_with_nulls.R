@@ -30,8 +30,6 @@ fs_decode_with_nulls <- function(fs.overlay,
   ##| create data environment --------------------------------------------------------
   ##|
 
-  fs.overlay[fsavg6$medial.wall.verts$both] <- 0
-
   if(is.null(data.env)){
     data.env <- new.env()
     data.env <- fs_create_decode_spins_data_env("both", genes) #| $mRNA: n.genes x n.verts
@@ -41,6 +39,13 @@ fs_decode_with_nulls <- function(fs.overlay,
     writeLines("\nRequires surrogate maps with dimensions n.perm x n.verts ...")
     break
   }
+
+  ##| Set NAs to zero --------------------------------------------------------
+  ##|
+
+  fs.overlay[is.na(fs.overlay)] <- 0
+  fs.nulls[is.na(fs.nulls)] <- 0
+  data.env$mRNA[is.na(data.env$mRNA)] <- 0
 
   ##| compute observed correlations  --------------------------------------------------------
   ##|
