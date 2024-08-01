@@ -19,13 +19,13 @@ fs_spatial_cor_with_nulls <- function(fs.x,
                                       fs.x.nulls,
                                       method = "pearson")
 {
-
   ##| Prepare data --------------------------------------------------------
   ##|
 
-  fs.x[fsavg6$medial.wall.verts$both] <- 0
-  fs.y[fsavg6$medial.wall.verts$both] <- 0
-  fs.x.nulls[, fsavg6$medial.wall.verts$both] <- 0
+  fs.x[which(is.na(fs.x))] <- 0
+  fs.y[which(is.na(fs.y))] <- 0
+  fs.x.nulls[which(is.na(fs.x.nulls))] <- 0
+  n.nulls <- nrow(fs.x.nulls)
 
   ##| compute observed correlation --------------------------------------------------------
   ##|
@@ -64,12 +64,5 @@ fs_spatial_cor_with_nulls <- function(fs.x,
 #                                                                              #
 ################################################################################
 
-# filename <- system.file("extdata/lh.rh.5HT1A.knn30000.sa1000.rda", package = "fsnulls")
-# load(filename)
-# fs.x.nulls <- sa.5HT1A
-#
-# fs_spatial_cor_with_nulls(fs.x = c(pet.5HT$`5HT1A`$lh, pet.5HT$`5HT1A`$rh),
-#                           fs.y = c(pet.GABAABZ$lh, pet.GABAABZ$rh),
-#                           fs.x.nulls = fs.x.nulls,
-#                           method = "pearson")
+
 
