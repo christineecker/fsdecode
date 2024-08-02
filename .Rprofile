@@ -21,6 +21,7 @@ reticulate::py_config()
 library(magrittr)
 library(usethis)
 library(fsnulls)
+library(ggplot2)
 
 ##| load all functions --------------------------------------------------------
 ##|
