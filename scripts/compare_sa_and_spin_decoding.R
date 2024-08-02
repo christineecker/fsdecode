@@ -1,5 +1,4 @@
 
-library(ggplot2)
 rm(list = ls()) %>% gc()
 
 ################################################################################
@@ -22,8 +21,8 @@ fs.spins <- fsnulls::fs_create_spins_bloch(fs.overlay, 1000L)
 ##| save a couple of examples --------------------------------------------------------
 ##|
 
-# write.dir <- "output/Nulls/HTR1A/"
-# fs::dir_create(write.dir)
+write.dir <- "output/Nulls/HTR1A/"
+fs::dir_create(write.dir)
 
 # for (i in 1:5) {
 #   spin <- sample(1:1000, 1)
@@ -88,6 +87,10 @@ genes.spins <- fs_decode_with_nulls(
 print(genes.spins)
 print(genes.spins[gene.index,])
 
+# > print(genes.spins[gene.index,])
+# gene.symbol gene.entrez         r      p.perm  p.maxT.adj   p.fdr.adj
+#   1:       HTR1A        3350 0.9097525 0.000999001 0.000999001 0.001111162
+
 ##| using surrogates --------------------------------------------------------
 ##|
 
@@ -100,8 +103,15 @@ genes.sa <- fs_decode_with_nulls(
 print(genes.sa)
 print(genes.sa[gene.index,])
 
+# > print(genes.sa[gene.index,])
+# gene.symbol gene.entrez         r      p.perm  p.maxT.adj  p.fdr.adj
+#   1:       HTR1A        3350 0.9097525 0.000999001 0.000999001 0.01410784
+
 ##| using surrogate gradients --------------------------------------------------------
 ##|
+
+##| Note. uses different data.env ...
+rm(data.env) %>% gc() # free up some RAM
 
 genes.sa_null <- fs_decode_sa_null(fs.overlay,
                                    data.env = NULL,
@@ -112,6 +122,10 @@ genes.sa_null <- fs_decode_sa_null(fs.overlay,
 print(genes.sa_null)
 print(genes.sa_null[gene.index,])
 
+# > print(genes.sa_null[gene.index,])
+# gene.symbol gene.entrez         r      p.perm  p.maxT.adj   p.fdr.adj
+# <char>       <num>     <num>       <num>       <num>       <num>
+#   1:       HTR1A        3350 0.8528762 0.000999001 0.000999001 0.004172424
 
 ################################################################################
 ## Compare Models
@@ -157,7 +171,7 @@ ylabel <- expression("P(p < p"[adj]*")")
 
 p <- ggplot(data = df.fpr, aes(x = p, y = FPR, group = method, color = method, fill = method)) %>%
   apply_theme_nature(base.size = 5, font = "Arial") +
-  geom_line(size = 0.5) +
+  geom_line(linewidth = 0.5) +
   scale_color_manual(values = c('#568ab7', '#ad3436', 'orange'),
                      labels = c("Alexander-Bloch", "Burt", expression(alpha*"-null"))) +
   xlab(xlabel) + ylab(ylabel) +
@@ -188,14 +202,21 @@ df <- list(
   "sa_null" = genes.sa_null$gene.symbol[which(genes.sa_null$p.maxT.adj < p.threshold)]
 )
 
-ggplot() +
-  geom_venn(df) +
-  theme_void() +
-  scale_fill_manual(values=c('#ad3436', 'orange'))
+myV <- nVennR::plotVenn(df)
 
-library(venneuler)
-library(rJava)
-
-# EXAMPLE: triple plot
-v <- venneuler(c("Burt"=length(df$Burt), B=length(df$sa_null), "Burt&B"=length(df$sa_null)))
-plot(v)
+cairo_pdf(
+  filename = paste0(write.dir, "Venn_0.05.pdf"),
+  width = 5,
+  height = 4,
+  onefile = TRUE
+)
+nVennR::showSVG(
+  myV,
+  opacity = 0.2,
+  setColors = c('#ad3436', 'orange'),
+  labelRegions = F,
+  fontScale = 2,
+  borderWidth = 3,
+  systemShow = F
+)
+dev.off()
