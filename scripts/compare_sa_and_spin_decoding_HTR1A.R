@@ -16,7 +16,9 @@ fs.overlay <- c(pet.5HT$`5HT1A`$lh, pet.5HT$`5HT1A`$rh)
 ##| compute spins --------------------------------------------------------
 ##|
 
-fs.spins <- fsnulls::fs_create_spins_bloch(fs.overlay, 1000L)
+system.time({
+  fs.spins <- fsnulls::fs_create_spins_bloch(fs.overlay, 1000L)
+})
 
 ##| save a couple of examples --------------------------------------------------------
 ##|
@@ -78,12 +80,14 @@ genes <- abagen.genes$symbol
 ##| Using spin models --------------------------------------------------------
 ##|
 
-genes.spins <- fs_decode_with_nulls(
-  fs.overlay,
-  fs.nulls = fs.spins,
-  data.env = data.env,
-  genes = genes
-)
+system.time({
+  genes.spins <- fs_decode_with_nulls(
+    fs.overlay,
+    fs.nulls = fs.spins,
+    data.env = data.env,
+    genes = genes
+  )
+})
 print(genes.spins)
 print(genes.spins[gene.index,])
 
@@ -94,12 +98,14 @@ print(genes.spins[gene.index,])
 ##| using surrogates --------------------------------------------------------
 ##|
 
-genes.sa <- fs_decode_with_nulls(
-  fs.overlay,
-  fs.nulls = sa.5HT1A,
-  data.env = data.env,
-  genes = genes
-)
+system.time({
+  genes.sa <- fs_decode_with_nulls(
+    fs.overlay,
+    fs.nulls = sa.5HT1A,
+    data.env = data.env,
+    genes = genes
+  )
+})
 print(genes.sa)
 print(genes.sa[gene.index,])
 
@@ -113,12 +119,14 @@ print(genes.sa[gene.index,])
 ##| Note. uses different data.env ...
 rm(data.env) %>% gc() # free up some RAM
 
-genes.sa_null <- fs_decode_sa_null(fs.overlay,
-                                   data.env = NULL,
-                                   hemi = "both",
-                                   method = "pearson",
-                                   use = "pairwise.complete.obs",
-                                   genes = genes)
+system.time({
+  genes.sa_null <- fs_decode_sa_null(fs.overlay,
+                                     data.env = NULL,
+                                     hemi = "both",
+                                     method = "pearson",
+                                     use = "pairwise.complete.obs",
+                                     genes = genes)
+})
 print(genes.sa_null)
 print(genes.sa_null[gene.index,])
 
